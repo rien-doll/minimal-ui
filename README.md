@@ -7,6 +7,8 @@ Minimal UI is a mod for FFXIV that reworks a large portion of the user interface
 
 ## Installing the mod
 
+**TEXTOOLS VERSION 2.0.6 OR HIGHER IS REQUIRED.**
+
 Visit https://textools.dualwield.net/ and download the application installer.
 
 When first opening TexTools, the application will try to detect your FFXIV installation. Confirm that the destination is correct and TexTools will open after.
