@@ -92,7 +92,7 @@ Not currently, outside of slight brightness/saturation changes. The game engine 
 Not at this time.
 
 
-**The hotbar lock is gone, how do I use it now?
+**The hotbar lock is gone, how do I use it now?**
 
 Despite not being visible, you can still click the region of the screen where the lock was (to the right of hotbar 1) to access the function. If you would like the lock icon back, disable actionbar.tex in your mod list.
 
