@@ -96,7 +96,9 @@ Not at this time.
 
 Despite not being visible, you can still click the region of the screen where the lock was (to the right of hotbar 1) to access the function. If you would like the lock icon back, disable actionbar.tex in your mod list.
 
+**How do I get rid of the minimap transparency?**
 
+Disable the navimap_mask texture in your mod list.
 
 
 ## Credit / Support 
