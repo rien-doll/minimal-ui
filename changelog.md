@@ -1,5 +1,5 @@
 
-## 1.0.3
+## 1.0.3:
 * Added chocobo icon
 * Fixed a few missing buttons and toggle indicator outline
 * Removed the slight minimap transparency and added it as an optional mod.
