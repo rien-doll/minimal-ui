@@ -92,10 +92,6 @@ Not currently, outside of slight brightness/saturation changes. The game engine 
 Not at this time.
 
 
-**How do I get rid of the minimap transparency?**
-
-Disable the navimap_mask texture in your mod list.
-
 
 ## Credit / Support 
 This mod was created by Rien Doll of Jenova, with various contributions from anonymous users and members of the TexTools discord.
