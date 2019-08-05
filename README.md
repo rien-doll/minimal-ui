@@ -4,11 +4,11 @@
 
 Minimal UI is a mod for FFXIV that reworks a large portion of the user interface with the goal of simplicity and ease of use in a raid scenario.
 
-# Circle Status Icons
+## Circle Status Icons
 
 Circle Status Icons is a mod for FFXIV that changes (most) DoW/DoM beneficial status effects into circles.
 
-# Preview
+## Preview
 ![a](preview2.png)
 
 ## Installing the mod
