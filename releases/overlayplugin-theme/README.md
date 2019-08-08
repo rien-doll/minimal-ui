@@ -19,4 +19,4 @@
 
 # Credit
 
-Everything here belongs entirely to RainbowMage - my theme was built off his.
+Everything here belongs entirely to RainbowMage - my theme was built off theirs.
