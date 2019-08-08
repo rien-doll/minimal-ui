@@ -1,0 +1,464 @@
+﻿<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<style>
+
+* {
+	font-family: "SCE-PS3 Rodin LATIN";
+	font-size: 12px;
+}
+
+body, html {
+	margin: 0;
+}
+
+html {
+	background-image: url(handle.png);
+	background-position: bottom right;
+	background-repeat: no-repeat;
+	box-sizing: border-box;
+	height: 100%;
+	background-color: transparent;
+	overflow: hidden;
+}
+
+
+#container {
+    background: rgba(0,0,0,0.1);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+
+#combatantTable {
+
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+#combatantTableBody * {
+text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	color: #dedfde;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	font-weight: 300;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+#combatantTableBody .mc * {
+
+	color: #dedfde;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.textred {
+
+	color: #dedfde !important;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#encounter,
+#combatantTableHeader * {
+
+	color: #dedfde;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	font-weight: 300;
+	white-space: nowrap;
+}
+
+#combatantTableHeader tr {
+	border-bottom: 1px solid #dedfde;
+}
+
+th:first-child,
+td:first-child {
+	padding-left:3px !important;
+}
+
+th:last-child,
+td:last-child {
+	
+}
+
+
+}
+
+
+
+}
+
+#combatantTableBody td.graphCell {
+	
+}
+
+ .enc{
+            color:#dedfde ;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+            font-weight: 300;
+
+            /* はみ出たテキストを「…」で省略する */
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+</style>
+<script src="./lib/jquery-2.1.1.min.js" type="text/javascript"></script>
+<script>
+
+		//
+		// プラグイン側から以下のような ActXiv オブジェクトとしてデータが提供される
+		//
+		// var ActXiv = {
+		//	"Encounter": {...},
+		//	"Combatant": {
+		//		"PlayerName1": {...},
+		//		"PlayerName2": {...},
+		//		...
+		//	}
+		// };
+		//
+		// データの更新は 1 秒毎。
+		//
+		// プラグインから onOverlayDataUpdate イベントが発行されるので、それを受信することもできる
+		// イベントハンドラの第一引数の detail プロパティ内に上記のオブジェクトが入る
+		//
+
+		//
+		// 表示設定 (2)
+		//
+
+		// エンカウント情報の定義
+		var encounterDefine = "Time:<span class='enc'>{duration}</span> &nbsp;&nbsp;&nbsp;Total DPS:<span class='enc'>{dps}</span> &nbsp;&nbsp;&nbsp;</span>";
+
+		// 上記のエンカウント情報を HTML として扱うなら true
+		var useHTMLEncounterDefine = true;
+
+		// ヘッダの定義
+		var headerDefine =
+		[
+			{ text: "Job", width: "2em", align: "center" },
+			{ text: "Name", width: "9em", align: "center" },
+			{ text: "DPS", width: "3em", align: "center" },
+			
+			{ text: "", width: "2em", align: "left" },
+			{ text: "Crit", width: "2.5em", align: "center" },
+			{ text: "", width: "1em", align: "center" },
+		{ text: "DH", width: "2em", align: "center" },
+			{ text: "CDH", width: "4.5em", align: "center" }
+		];
+
+		// 表示するデータの定義
+		var bodyDefine =
+		[
+			{ html: "<img src='./images/minimalui/{JobOrName}.png' onerror='$(this).attr(\"src\", \"./images/error.png\");' style='width=60%;height:60%;' />", align: "center", effect: jobColorEffect },
+			{ text: "{name}", width: "", align: "center",effect: myCharacterEffect },
+			{ text: "{encdps}", width: "5em", align: "center"},
+			{ text: "", width: "2.5em", align: "center" },
+			{ text: "{crithit%}", width: "", align: "center" },
+			{ text: "", width: "1em", align: "center" },
+			{ text: "{DirectHitPct}", width: "", align: "center", },
+			{ text: "{CritDirectHitPct}", width: "", align: "center", }
+		];
+
+		function myCharacterEffect(cell, combatant, index) {
+			var myname = "YOU";
+			if (myname == combatant["name"]) {
+				$(cell).parents("tr").addClass("mc");
+			}
+		}
+
+		function jobColorEffect(cell, combatant, index) {
+			$(cell).parents("tr").addClass(combatant["Job"]);
+		}
+
+		function insertCommaEffect(cell) {
+			cell.innerText = cell.innerText.replace( /(\d)(?=(\d\d\d)+(?!\d))/g,'$1,');
+		}
+
+		function redTextEffect(cell) {
+			var num = parseInt(cell.innerText)
+			if (num > 0) {
+				$(cell).addClass("textred");
+			}
+		}
+
+		function graphEffect(cell) {
+			$(cell).addClass("graphCell");
+		}
+
+		function graphRendering(table) {
+			$("tr:eq(0) > td.graphCell", table).each(function(){
+				var max = 0;
+				$("tr > td:nth-child("+($("tr:eq(0) td", table).index($(this))+1)+")", table).each(function(){
+					max = (max < parseInt($(this).text().replace(/[^\d]/g,""))) ? parseInt($(this).text().replace(/[^\d]/g,"")) : max;
+				});
+				$("tr > td:nth-child("+($("tr:eq(0) td", table).index($(this))+1)+")", table).each(function(){
+					p = (max == 0) ? "0%" : (parseInt($(this).text().replace(/[^\d]/g,"")) / max *100) + "%";
+					$(this).css("background-size", p+" 100%, 100% 100%");
+				});
+			});
+		}
+
+
+		//
+		// 以下表示用スクリプト
+		//
+
+		// onOverlayDataUpdate イベントを購読
+		document.addEventListener("onOverlayDataUpdate", function (e) {
+			update(e.detail);
+		});
+
+		// 表示要素の更新
+		function update(data) {
+			updateEncounter(data);
+			if (document.getElementById("combatantTableHeader") == null) {
+				updateCombatantListHeader();
+			}
+			updateCombatantList(data);
+		}
+
+		// エンカウント情報を更新する
+		function updateEncounter(data) {
+			// 要素取得
+			var encounterElem = document.getElementById('encounter');
+
+			// テキスト取得
+			var elementText;
+			if (typeof encounterDefine === 'function') {
+				elementText = encounterDefine(data.Encounter);
+				if (typeof elementText !== 'string') {
+                    		console.log("updateEncounter: 'encounterDefine' is declared as function but not returns a value as string.");
+                   	 	return;
+                		}
+			} else if (typeof encounterDefine === 'string') {
+				elementText = parseActFormat(encounterDefine, data.Encounter);
+			} else {
+				console.log("updateEncounter: Could not update the encounter element due to invalid type.");
+				return;
+			}
+
+			// テキスト設定
+			if (!useHTMLEncounterDefine) {
+				encounterElem.innerText = parseActFormat(encounterDefine, data.Encounter);
+			} else {
+				encounterElem.innerHTML = parseActFormat(encounterDefine, data.Encounter);
+			}
+		}
+
+		// ヘッダを更新する
+		function updateCombatantListHeader() {
+			var table = document.getElementById('combatantTable');
+			var tableHeader = document.createElement("thead");
+			tableHeader.id = "combatantTableHeader";
+			var headerRow = tableHeader.insertRow();
+
+			for (var i = 0; i < headerDefine.length; i++) {
+				var cell = document.createElement("th");
+				// テキスト設定
+				if (typeof headerDefine[i].text !== 'undefined') {
+					cell.innerText = headerDefine[i].text;
+				} else if (typeof headerDefine[i].html !== 'undefined') {
+					cell.innerHTML = headerDefine[i].html;
+				}
+				// 幅設定
+				cell.style.width = headerDefine[i].width;
+				cell.style.maxWidth = headerDefine[i].width;
+				// 横結合数設定
+				if (typeof headerDefine[i].span !== 'undefined') {
+					cell.colSpan = headerDefine[i].span;
+				}
+				// 行揃え設定
+				if (typeof headerDefine[i].align !== 'undefined') {
+					cell.style["textAlign"] = headerDefine[i].align;
+				}
+				headerRow.appendChild(cell);
+			}
+
+			table.tHead = tableHeader;
+		}
+
+		// プレイヤーリストを更新する
+		function updateCombatantList(data) {
+			// 要素取得＆作成
+			var table = document.getElementById('combatantTable');
+			var oldTableBody = table.tBodies.namedItem('combatantTableBody');
+			var newTableBody = document.createElement("tbody");
+			newTableBody.id = "combatantTableBody";
+
+			 // tbody の内容を作成
+            			var combatantIndex = 0;
+            			for (var combatantName in data.Combatant) {
+                			var combatant = data.Combatant[combatantName];
+				//ペットのジョブ画像読み込み用の設定
+                		if (combatantName.search("エオス") != -1) {
+                   		var combatantName = 'Eos';
+                   		}
+                　 		if (combatantName.search("ガルーダ") != -1) {
+                   		var combatantName = 'Garuda';
+                   		}
+                   		if (combatantName.search("タイタン") != -1) {
+                   		var combatantName = 'Titan';
+                   		}
+                   		if (combatantName.search("イフリート") != -1) {
+                   		var combatantName = 'Ifrit';
+                   		}
+                   		if (combatantName.search("セレネ") != -1) {
+                   		var combatantName = 'Selene';
+                   		}
+                   		if (combatantName.search("エメラルド") != -1) {
+                   		var combatantName = 'emerald';
+                   		}
+                   		if (combatantName.search("トパーズ") != -1) {
+                   		var combatantName = 'topaz';
+                   		}
+                   		if (combatantName.search(/\)$/) != -1) {
+                   		var combatantName = 'Chocobo';
+                   		}
+                			combatant.JobOrName = combatant.Job.toLowerCase() || combatantName;
+                			var tableRow = newTableBody.insertRow(newTableBody.rows.length);
+                			for (var i = 0; i < bodyDefine.length; i++)
+                			{
+					var cell = tableRow.insertCell(i);
+					// テキスト設定
+					if (typeof bodyDefine[i].text !== 'undefined') {
+						var cellText;
+						if (typeof bodyDefine[i].text === 'function') {
+							cellText = bodyDefine[i].text(combatant, combatantIndex);
+						} else {
+							cellText = parseActFormat(bodyDefine[i].text, combatant);
+						}
+						cell.innerText = cellText;
+					} else if (typeof bodyDefine[i].html !== 'undefined') {
+						var cellHTML;
+						if (typeof bodyDefine[i].html === 'function') {
+							cellHTML = bodyDefine[i].html(combatant, combatantIndex);
+						} else {
+							cellHTML = parseActFormat(bodyDefine[i].html, combatant);
+						}
+						cell.innerHTML = cellHTML;
+					}
+					// 幅設定
+					cell.style.width = bodyDefine[i].width;
+					cell.style.maxWidth = bodyDefine[i].width;
+					// 行構え設定
+					if (typeof(bodyDefine[i].align) !== 'undefined') {
+						cell.style.textAlign = bodyDefine[i].align;
+					}
+
+
+                    //特定の行の文字を変更
+                    if(combatantName==="YOU") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="Limit Break") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="Ifrit") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="Titan") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="Garuda") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="Eos") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="Selene") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="emerald") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="topaz") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    } else if(combatantName==="Chocobo") {
+                        cell.style.color = "#dedfde";
+                        cell.style.textShadow = "2px 2px 4px #000000;";
+                    }
+
+
+					// エフェクト実行
+					if (typeof bodyDefine[i].effect === 'function') {
+						bodyDefine[i].effect(cell, combatant, combatantIndex);
+					}
+				}
+				combatantIndex++;
+			}
+
+			graphRendering(newTableBody);
+
+			// tbody が既に存在していたら置換、そうでないならテーブルに追加
+			if (oldTableBody != void(0)) {
+				table.replaceChild(newTableBody, oldTableBody);
+			}
+			else {
+				table.appendChild(newTableBody);
+			}
+		}
+
+		// Miniparse フォーマット文字列を解析し、表示文字列を取得する
+		function parseActFormat(str, dictionary)
+		{
+			var result = "";
+
+			var currentIndex = 0;
+			do {
+				var openBraceIndex = str.indexOf('{', currentIndex);
+				if (openBraceIndex < 0) {
+					result += str.slice(currentIndex);
+					break;
+				}
+				else {
+					result += str.slice(currentIndex, openBraceIndex);
+					var closeBraceIndex = str.indexOf('}', openBraceIndex);
+					if (closeBraceIndex < 0) {
+						// parse error!
+						console.log("parseActFormat: Parse error: missing close-brace for " + openBraceIndex.toString() + ".");
+						return "ERROR";
+					}
+					else {
+						var tag = str.slice(openBraceIndex + 1, closeBraceIndex);
+						if (typeof dictionary[tag] !== 'undefined') {
+							result += dictionary[tag];
+						} else {
+							console.log("parseActFormat: Unknown tag: " + tag);
+							result += "ERROR";
+						}
+						currentIndex = closeBraceIndex + 1;
+					}
+				}
+			} while (currentIndex < str.length);
+
+			return result;
+		}
+
+	</script>
+</head>
+<body>
+
+<div id="container">
+
+
+	<div id="encounter">
+		No data to show.
+		<!-- ここにエンカウント情報が入る -->
+	</div>
+
+	<table id="combatantTable">
+		<!-- ここにヘッダが入る -->
+		<!-- ここに各キャラの情報が入る -->
+	</table>
+
+</div>
+
+
+</body>
+</html>
