@@ -1,3 +1,8 @@
+## 1.0.5:
+* Added missing buttons
+* Updated Circle Status Icons for patch 5.1
+
+
 ## 1.0.4:
 * Added small outline to hotbar icons
 * Added extra opacity to parameter bars
