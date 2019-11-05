@@ -1,3 +1,7 @@
+## 1.0.6:
+* Fixed summoner pet icon displaying old default texture in party list
+* Fixed missing favorites button on the market board interface
+
 ## 1.0.5:
 * Added missing buttons
 * Updated Circle Status Icons for patch 5.1
