@@ -1,3 +1,9 @@
+## 1.0.7:
+* Fixed missing icon in mount/minion books
+* Fixed missing icon on group pose menu
+* Fixed missing icon on map
+* Removed accidental circle icon
+
 ## 1.0.6:
 * Fixed summoner pet icon displaying old default texture in party list
 * Fixed missing favorites button on the market board interface
