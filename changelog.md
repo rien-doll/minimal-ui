@@ -1,8 +1,8 @@
 ## 1.0.8a: 
-Upload raw textures, clean up readme
+* Upload raw textures, clean up readme
 
 ## 1.0.8:
-Fix various things broken in patch 5.1/5.2
+* Fix various things broken in patch 5.1/5.2
 
 ## 1.0.7:
 * Fixed missing icon in mount/minion books
