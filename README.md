@@ -52,6 +52,9 @@ While these precautions don’t always turn out to be necessary, you risk damagi
 ## Making changes to textures
 If you would like to further customize the included textures to your liking, you are welcome to do so. The TexTools website has easy to follow [tutorials](https://textools.dualwield.net/tutorials/) on basic texture editing. Refer to the [texture list](/texturelist) to locate elements you’re interested in changing.
 
+## Finding Icons
+You can browse all of the icons ingame at [XIVAPI](https://xivapi.com/docs/Icons).
+
 ## Troubleshooting
 
 TexTools will automatically create backups of the game’s files. If you are getting any crashes or texture issues after a patch, you can revert your game files back to default by using the “Start Over” option in the TexTools help menu.
@@ -93,8 +96,12 @@ Not currently, outside of slight brightness/saturation changes. The game engine 
 
 **Does this mod support the light theme?**
 
-Not at this time.
+Unfortunately, the light theme is not supportable through texture editing alone.
 
+## Other recommended software
+
+* [FFXIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher)
+A custom launcher with a plugin system that adds multiple QoL features ingame.
 
 
 ## Credit / Support 
