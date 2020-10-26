@@ -9,9 +9,12 @@ Circle Status Icons is a mod for FFXIV that changes (most) DoW/DoM beneficial st
 ## Preview
 ![a](preview2.png)
 
+## Notice
+I will no longer be able to update the mod for the forseeable future, but it should remain functional for the rest of the expansion, if not further. I have reached the point of satisfaction with the design awhile ago, and very few textures get changed per patch. I have uploaded all of the raw textures used [here](https://github.com/rien-doll/minimal-ui/tree/master/textures) and you may feel free to fork the project or use them for any personal use. If you would prefer an alternative skin originally based on my work, but further expanded with many more options, you can try [SKOTLEX's "Material UI"](https://github.com/skotlex/ffxiv-material-ui). 
+
 ## Installing the mod
 
-**TEXTOOLS VERSION 2.0.6 OR HIGHER IS REQUIRED.**
+**TEXTOOLS VERSION 2.2.0 OR HIGHER IS REQUIRED.**
 
 Visit https://textools.dualwield.net/ and download the application installer.
 
@@ -105,12 +108,10 @@ A custom launcher with a plugin system that adds multiple QoL features ingame.
 
 
 ## Credit / Support 
-This mod was created by Rien Doll of Jenova, with various contributions from anonymous users and members of the TexTools discord.
+This mod was created by Rien Doll of Jenova, with various contributions from anonymous users and members of the TexTools discord.  
 
-Thank you to all testers!
+The font used in most textures is [SCE-Ps3 Rodin LATIN](https://fontsup.com/font/sce-ps3-rodin-latin-bold.html).  
 
-If you would like to donate for my work, you may do so [here](https://ko-fi.com/rien_doll). Donations are entirely optional, but appreciated!
+Thank you to all testers, donators, and anyone I've played with in the past. 
 
-Please direct message me on [twitter](https://twitter.com/rien_doll) if you have any questions that the troubleshooting section or FAQ don’t answer. I will also post updates and news there.
 
-The font used in most textures is [SCE-Ps3 Rodin LATIN](https://fontsup.com/font/sce-ps3-rodin-latin-bold.html).
